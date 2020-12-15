@@ -10,7 +10,7 @@ L1 = 1.0
 L2 = 1.0
 M1 = 1.0
 M2 = 1.0
-b = 0.3 # stała tłumienia
+b = 0.8 # stała tłumienia
 
 
 def derivs(state, t):
@@ -45,7 +45,7 @@ t = np.arange(0, 20, dt)
 th1 = -190
 w1 = 0.0
 th2 = 90
-w2 = 10.0
+w2 = 110.0
 
 
 state = np.radians([th1, w1, th2, w2])

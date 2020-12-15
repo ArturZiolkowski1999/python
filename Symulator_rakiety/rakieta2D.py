@@ -2,36 +2,51 @@ from pylab import *
 import matplotlib.animation as animation
 
 # stale
-M0 = 1 #kg masa rakiety bez paliwa
-MP = 10 # masa rakiety z paliwem
+M0 = 12.284 #kg masa rakiety bez paliwa
+MP = 28.4 # masa rakiety z paliwem
 g = 9.81 #m/s**2 przysp ziemskie
 s = 0.01 # stala zaniku eksponenty ciagu silnika - model eksponencjalny
-c = 3000.0 # v spalin
+c = 4500.0 # v spalin
 h = 0.05 #s skok
 b = 0.2 # stala oporow powietrza
 l = 2 # wysokosc rakiety
-simulation_time = 60 #s czas symulacji
+ro = 1.2 #kg/m**3
+Ay = 0.01 #m**2 czolowa powierzchnia rakiety
+Ax = 0.4 #m**2 boczna powierzchnia rakiety
+Cd = 0.01 # wspolczynnik silu opou
+simulation_time = 50 #s czas symulacji
 number_of_steps = 1000 # liczba krokow
-xrange_right = 10000
-xrange_left = -100
+xrange_right = 1000
+xrange_left = -1000
 yrange = 8000
+
+# warunki poczatkowe
+x0 = 0 #m polozenie poczatkowe
+vx0 = 0 #m/s predkosc poczatkowa
+y0 = 0
+vy0 = 0
+fi0 = pi/2 - 0.01
+vfi0 = 0
 
 
 # funkcja przyspieszenia wspolrzednych uogulnionych z pomoca rownaia lagrangea 2
 def f_ax(t,x,y,fi,vx,vy,vfi, m, m_prim):
     if y >= 0:
-        return s * c * (1.0 - (M0 / m)) * cos(fi)
+        return s * c * (1.0 - (M0 / m)) * cos(fi) - 0.5 * ro*Ax*Cd*vx**2
     else:
         return 0
 
 def f_ay(t,x,y,fi,vx,vy,vfi, m, m_prim):
     if y >= 0:
-        return -g + s * c * (1.0 - (M0/m)) * sin(fi)
+        return -g + s * c * (1.0 - (M0/m)) * sin(fi) - 0.5 * ro*Ay*Cd*vy**2
     else:
         return 0
 
 def f_afi(t,x,y,fi,vx,vy,vfi,m, m_prim):
-    return 0
+    if y >= 0:
+        return  + (l/2) * s * c * (1.0 - (M0 / m)) * cos(fi) * cos(fi)
+    else:
+        return 0
 
 # funkcja definiujaca przedkosc otrzymana z rownania lagrangea 2
 def f_vx(t,x,y,fi,vx,vy,vfi,m, m_prim):
@@ -59,14 +74,6 @@ def f_dm_dt(t):
 
 
 
-
-# warunki poczatkowe
-x0 = 0 #m polozenie poczatkowe
-vx0 = 0 #m/s predkosc poczatkowa
-y0 = 0
-vy0 = 0
-fi0 = pi/3
-vfi0 = 0
 
 
 #tablice z obliczonymi danymi
