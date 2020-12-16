@@ -106,9 +106,9 @@
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="685" />
-    <option name="y" value="-23" />
+  <component name="ProjectFrameBounds" extendedState="7">
+    <option name="x" value="357" />
+    <option name="y" value="-9" />
     <option name="width" value="1100" />
     <option name="height" value="1090" />
   </component>
@@ -148,7 +148,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.double_pendulum">
+  <component name="RunManager" selected="Python.rakieta2D">
     <configuration name="double_pendulum" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="Symulator_rakiety" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -256,8 +256,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.double_pendulum" />
         <item itemvalue="Python.rakieta2D" />
+        <item itemvalue="Python.double_pendulum" />
         <item itemvalue="Python.test" />
         <item itemvalue="Python.rakieta1D" />
         <item itemvalue="Python.rocket2D_animation" />
