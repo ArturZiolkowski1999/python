@@ -10,7 +10,7 @@ L1 = 1.0
 L2 = 1.0
 M1 = 1.0
 M2 = 1.0
-b = 0.8 # stała tłumienia
+b = 0.0 # stała tłumienia
 
 
 def derivs(state, t):
