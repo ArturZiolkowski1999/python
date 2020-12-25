@@ -3,48 +3,56 @@ import matplotlib.animation as animation
 
 # stale
 M0 = 12.284 #kg masa rakiety bez paliwa
-MP = 48.4 # masa rakiety z paliwem
+MP = 1318.4 # masa paliwa
 g = 9.81 #m/s**2 przysp ziemskie
 s = 0.01 # stala zaniku eksponenty ciagu silnika - model eksponencjalny
-c = 3000.0 # v spalin
+c = 4000.0 # v spalin
 h = 0.05 #s skok
-b = 0.2 # stala oporow powietrza
-l = 2 # wysokosc rakiety
+l = 2.5 # wysokosc rakiety
 ro = 1.2 #kg/m**3
 Ay = 0.01 #m**2 czolowa powierzchnia rakiety
-Ax = 0.4 #m**2 boczna powierzchnia rakiety
-Cd = 0.01 # wspolczynnik silu opou
-simulation_time = 50 #s czas symulacji
+Ax = 0.05 #m**2 boczna powierzchnia rakiety
+Cd = 0.001 # wspolczynnik silu opou drag force
+Cl = 0.01 # wspolczynnik silu opou lift force
+cp_cg = -0.2
+simulation_time = 100 #s czas symulacji
 number_of_steps = 1000 # liczba krokow
-xrange_right = 1000
-xrange_left = -1000
-yrange = 3000
+xrange_right = 10000
+xrange_left = -10000
+yrange = 30000
 
 # warunki poczatkowe
 x0 = 0 #m polozenie poczatkowe
 vx0 = 0 #m/s predkosc poczatkowa
 y0 = 0
 vy0 = 0
-fi0 = pi/2 - 0.01
+fi0 = pi/2 - 0.1
 vfi0 = 0
 
 
 # funkcja przyspieszenia wspolrzednych uogulnionych z pomoca rownaia lagrangea 2
 def f_ax(t,x,y,fi,vx,vy,vfi, m, m_prim):
     if y >= 0:
-        return s * c * (1.0 - (M0 / m)) * cos(fi) - 0.5 * ro*Ax*Cd*vx**2
+        if fi > 0 and fi < pi/2:
+            return s * c * (1.0 - (M0 / m)) * cos(fi) - 0.5 * ro * Ay * Cd * vx ** 2 - 0.5 * ro * Ax * Cd * vy ** 2
+        elif fi > pi/2 and fi <pi:
+            return s * c * (1.0 - (M0 / m)) * cos(fi) - 0.5 * ro * Ay * Cd * vx ** 2 + 0.5 * ro * Ax * Cd * vy ** 2
+        elif fi > pi and fi < 3*pi/2:
+            return s * c * (1.0 - (M0 / m)) * cos(fi) - 0.5 * ro * Ay * Cd * vx ** 2 - 0.5 * ro * Ax * Cd * vy ** 2
+        elif fi > 3*pi/2 and fi < 2*pi:
+            return s * c * (1.0 - (M0 / m)) * cos(fi) - 0.5 * ro * Ay * Cd * vx ** 2 + 0.5 * ro * Ax * Cd * vy ** 2
     else:
         return 0
 
 def f_ay(t,x,y,fi,vx,vy,vfi, m, m_prim):
     if y >= 0:
-        return -g + s * c * (1.0 - (M0/m)) * sin(fi) - 0.5 * ro*Ay*Cd*vy**2
+        return -g + s * c * (1.0 - (M0/m)) * sin(fi) - 0.5 * ro*Ay*Cd*vy**2 + 0.5 * ro*Ax*Cd*vx**2
     else:
         return 0
 
 def f_afi(t,x,y,fi,vx,vy,vfi,m, m_prim):
     if y >= 0:
-        return  + (l/2) * s * c * (1.0 - (M0 / m)) * cos(fi) * cos(fi)
+        return (cp_cg * sqrt((0.5 * ro*Ax*Cd*vx**2)**2 + 0.5 * (ro*Ax*Cd*vy**2)**2))/(m*l**2)
     else:
         return 0
 
@@ -127,7 +135,7 @@ for i in range(len(t) - 1):
         vx.append(vx[i] + (K1ax + 2 * K2ax + 2 * K3ax + K4ax) / 6.0)
         y.append(y[i] + (K1vy + 2 * K2vy + 2 * K3vy + K4vy) / 6.0)
         vy.append(vy[i] + (K1ay + 2 * K2ay + 2 * K3ay + K4ay) / 6.0)
-        fi.append(fi[i] + (K1vfi + 2 * K2vfi + 2 * K3vfi + K4vfi) / 6.0)
+        fi.append((fi[i] + (K1vfi + 2 * K2vfi + 2 * K3vfi + K4vfi) / 6.0)%(2*pi))
         vfi.append(vfi[i] + (K1afi + 2 * K2afi + 2 * K3afi + K4afi) / 6.0)
 
         #masa , jej pochodna i ciag
